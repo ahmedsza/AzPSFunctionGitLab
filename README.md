@@ -1,6 +1,8 @@
 # Deploy Powershell Azure Function with GitLab
 
-This is an example of taking a hello world Azure Powershell function and deploying with GitLab Pipeline
+This is an example of taking a hello world Azure Powershell function and deploying with GitLab Pipeline. The pipeline also creates the storage acount and Azure Function (simple infra as code using az cli). 
+Technically just needs an empty resource group. 
+A Service principal should be created - and the pipeline logs in with that account to create the resources and deploy the code.
 
 Steps
 
