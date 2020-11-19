@@ -1,0 +1,19 @@
+stages:
+  - deploy
+
+deploy:
+  stage: deploy
+  image: mcr.microsoft.com/dotnet/core/sdk:3.1
+  script:
+    - apt-get update && apt-get -y install zip
+    - curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+    - apt-get install curl && curl -sL https://deb.nodesource.com/setup_12.x | bash -
+    - apt-get install nodejs
+    - npm install -g azure-functions-core-tools@3 --unsafe-perm true
+    - az login --service-principal -u $SP_APP_ID -p $SP_PASSWORD --tenant  $SP_TENANT_ID
+    - az storage account create --name $storageaccountname --location $location --resource-group $rgname --sku Standard_LRS
+    - az functionapp create --resource-group $rgname --consumption-plan-location $location --runtime powershell --functions-version 3 --name $azurefunctionappname --storage-account $storageaccountname
+    - cd AzFuncSAS
+    - func azure functionapp publish $azurefunctionappname
+  only:
+    - master
